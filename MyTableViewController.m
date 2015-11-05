@@ -1,7 +1,7 @@
 /*
      File: MyTableViewController.m
  Abstract: The main view controller of this app.
-  Version: 1.0
+  Version: 1.1
  
  Disclaimer: IMPORTANT:  This Apple software is supplied to you by Apple
  Inc. ("Apple") in consideration of your agreement to the following
@@ -41,7 +41,7 @@
  STRICT LIABILITY OR OTHERWISE, EVEN IF APPLE HAS BEEN ADVISED OF THE
  POSSIBILITY OF SUCH DAMAGE.
  
- Copyright (C) 2008 Apple Inc. All Rights Reserved.
+ Copyright (C) 2009 Apple Inc. All Rights Reserved.
  
  */
 
@@ -49,12 +49,12 @@
 
 @implementation MyTableViewController
 
-@synthesize myHeaderView, myFooterView;
+@synthesize myHeaderView, myFooterView, tableArray;
 
 - (void)viewDidLoad
 {
 	// setup our table data
-	tableArray = [[NSArray arrayWithObjects:@"Camping", @"Water Skiing", @"Weight Lifting", @"Stamp Collecting", nil] retain];
+	self.tableArray = [NSArray arrayWithObjects:@"Camping", @"Water Skiing", @"Weight Lifting", @"Stamp Collecting", nil];
 	
 	// set up the table's header view based on our UIView 'myHeaderView' outlet
 	CGRect newFrame = CGRectMake(0.0, 0.0, self.tableView.bounds.size.width, self.myHeaderView.frame.size.height);
@@ -69,37 +69,29 @@
 	self.tableView.tableFooterView = self.myFooterView;	// note this will override UITableView's 'sectionFooterHeight' property
 }
 
+// called after the view controller's view is released and set to nil.
+// For example, a memory warning which causes the view to be purged. Not invoked as a result of -dealloc.
+// So release any properties that are loaded in viewDidLoad or can be recreated lazily.
+//
+- (void)viewDidUnload
+{
+	self.myHeaderView = nil;
+	self.myFooterView = nil;
+	self.tableArray = nil;
+}
+
 - (void)dealloc
 {	
 	[myFooterView release];
 	[myHeaderView release];
 	[tableArray release];
+	
 	[super dealloc];
 }
 
 
-#pragma mark - UIViewController delegate methods
-
-- (void)didReceiveMemoryWarning
-{
-	// invoke super's implementation to do the Right Thing, but also release the input controller since we can do that	
-	// In practice this is unlikely to be used in this application, and it would be of little benefit,
-	// but the principle is the important thing
-	//
-	[super didReceiveMemoryWarning];
-}
-
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
-	return YES;
-}
-
-#pragma mark - UITableView delegate methods
-
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
-{
-	return 1;
-}
+#pragma mark -
+#pragma mark UITableViewDataSource
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
@@ -111,37 +103,33 @@
 	return [tableArray count];
 }
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
-	[tableView deselectRowAtIndexPath:indexPath	animated:YES];
-}
-
-#define kCellID @"cellID"
-
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+	static NSString *kCellID = @"cellID";
+	
 	UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:kCellID];
 	if (cell == nil)
 	{
-		cell = [[[UITableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:kCellID] autorelease];
+		cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:kCellID] autorelease];
+		cell.accessoryType = UITableViewCellAccessoryNone;
+		cell.selectionStyle = UITableViewCellSelectionStyleNone;
 	}
 	
-	cell.accessoryType = UITableViewCellAccessoryNone;
-	cell.selectionStyle = UITableViewCellSelectionStyleNone;
-	cell.text = [tableArray objectAtIndex:[indexPath row]];
+	cell.textLabel.text = [tableArray objectAtIndex:[indexPath row]];
 	
 	return cell;
 }
 
 
-#pragma mark - Action methods
+#pragma mark -
+#pragma mark Action methods
 
-- (void)button1Action:(id)sender
+- (IBAction)button1Action:(id)sender
 {
 	// Button1 was pressed
 }
 
-- (void)button2Action:(id)sender
+- (IBAction)button2Action:(id)sender
 {
 	// Button2 was pressed
 }

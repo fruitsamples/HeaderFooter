@@ -1,7 +1,7 @@
 /*
      File: MyTableViewController.h
  Abstract: The main view controller of this app.
-  Version: 1.0
+  Version: 1.1
  
  Disclaimer: IMPORTANT:  This Apple software is supplied to you by Apple
  Inc. ("Apple") in consideration of your agreement to the following
@@ -41,7 +41,7 @@
  STRICT LIABILITY OR OTHERWISE, EVEN IF APPLE HAS BEEN ADVISED OF THE
  POSSIBILITY OF SUCH DAMAGE.
  
- Copyright (C) 2008 Apple Inc. All Rights Reserved.
+ Copyright (C) 2009 Apple Inc. All Rights Reserved.
  
  */
 
@@ -49,16 +49,17 @@
 
 @interface MyTableViewController : UITableViewController
 {
-	IBOutlet UIView *myHeaderView;
-	IBOutlet UIView *myFooterView;
+	UIView *myHeaderView;
+	UIView *myFooterView;
 	
 	NSArray *tableArray;
 }
 
-@property (nonatomic, retain) UIView *myHeaderView;
-@property (nonatomic, retain) UIView *myFooterView;
+@property (nonatomic, retain) IBOutlet UIView *myHeaderView;
+@property (nonatomic, retain) IBOutlet UIView *myFooterView;
+@property (nonatomic, retain) NSArray *tableArray;
 
-- (void)button1Action:(id)sender;
-- (void)button2Action:(id)sender;
+- (IBAction)button1Action:(id)sender;
+- (IBAction)button2Action:(id)sender;
 
 @end
